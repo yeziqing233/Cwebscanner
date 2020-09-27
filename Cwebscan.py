@@ -71,7 +71,11 @@ class Scanner(object):
 
     def get_info(self, ip, port):
         try:
-            url    = 'http://{}:{}'.format(str(ip), str(port))
+            url=''
+            if port=='443':
+                url= 'https://{}:{}'.format(str(ip), str(port))
+            else:
+                url= 'http://{}:{}'.format(str(ip), str(port))
             header = {'User-Agent': 'Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3)'}
             res    = requests.get(url, timeout=1, headers=header, verify=False, allow_redirects=True)
             serv   = res.headers['Server'].split()[0] if 'Server' in str(res.headers) else ''
@@ -82,7 +86,7 @@ class Scanner(object):
             self.lock.release()
         except Exception as e:
             pass
-            
+
     def start(self, ip):
         #自定义扫描端口使用协程进行处理        
         if self.custom_ports:
